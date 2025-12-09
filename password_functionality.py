@@ -40,7 +40,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # -------------------- MAIN TITLE --------------------
-st.markdown("<div class='main-title'>📘 Attendance Slot Creation</div>", unsafe_allow_html=True)
+st.markdown("<div class='main-title'>📘 Attendance </div>", unsafe_allow_html=True)
 
 # -------------------- CARD UI --------------------
 with st.container():
@@ -59,7 +59,7 @@ with st.container():
         if not division or not teacher or not subject or not student_password:
             st.warning("⚠️ Please fill all fields.")
         else:
-            st.write("### **Attendance Slot Created For:**")
+            st.write("### **Attendance **")
             st.write(f"- **Division:** {division}")
             st.write(f"- **Teacher:** {teacher}")
             st.write(f"- **Subject:** {subject}")
