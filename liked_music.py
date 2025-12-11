@@ -14,11 +14,11 @@ song_data = {
     },
     "Sunflower": {
         "artist": "Post Malone & Swae Lee",
-        "youtube": "https://youtu.be/apXoWvfEYVU"
+        "youtube": "https://youtu.be/ApXoWvfEYVU?si=TrRfsWimtAbPfZck"
     },
     "Intentions": {
         "artist": "Justin Bieber ft. Quavo",
-        "youtube": "https://youtu.be/_Yhyp-_hX2s"
+        "youtube": "https://youtu.be/3AyMjyHu1bA?si=KQ3kGF0l4GphAe2P"
     },
     "Girls Like You": {
         "artist": "Maroon 5 ft. Cardi B",
@@ -26,7 +26,7 @@ song_data = {
     },
     "Come Around Me": {
         "artist": "Justin Bieber",
-        "youtube": "https://youtu.be/Tv-f5p4v3Pc"
+        "youtube": "https://youtu.be/GtDwH6fPRMA?si=RbSvZT3OLHZf6C9t"
     },
     "Let Me": {
         "artist": "Zayn",
