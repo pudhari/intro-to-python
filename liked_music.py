@@ -30,19 +30,19 @@ song_data = {
     },
     "Let Me": {
         "artist": "Zayn",
-        "youtube": "https://youtu.be/17ozSeGw-fU"
+        "youtube": "https://youtu.be/J-dv_DcDD_A?si=_fAufEPmmMN_pX7M"
     },
     "Back To You": {
         "artist": "Selena Gomez",
-        "youtube": "https://youtu.be/RQc77zvkaB8"
+        "youtube": "https://youtu.be/VY1eFxgRR-k?si=GMj5GJYYIw6aiSLz"
     },
     "My Mind & Me": {
         "artist": "Selena Gomez",
-        "youtube": "https://youtu.be/IOqNz8aNC2g"
+        "youtube": "https://youtu.be/TW98pGSTvM0?si=0KNLDCqLly1woXAk"
     },
     "Closer": {
         "artist": "The Chainsmokers ft. Halsey",
-        "youtube": "https://youtu.be/PT2_F-1uJ4I"
+        "youtube": "https://youtu.be/PT2_F-1esPk?si=GCj-C2o1yJ1ecQxZ"
     }
 }
 
@@ -62,7 +62,7 @@ if "liked" not in st.session_state:
     ]
 
 st.markdown("""
-    <h1 style='color:#FF69B4; font-size:48px; text-align:center;'>🎧 Your Liked Music</h1>
+    <h1 style='color:#1E90FF; font-size:48px; text-align:center;'>🎧 Your Liked Music</h1>
     <p style='text-align:center; font-size:18px; color:#1E90FF;'>Click play to listen</p>
     <hr>
 """, unsafe_allow_html=True)
