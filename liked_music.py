@@ -22,7 +22,7 @@ song_data = {
 # ---- Audio previews (public example mp3s) ----
 # Replace these URLs with real preview mp3 URLs when you have them.
 song_previews = {
-    "Work": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+    "Work": "https://youtu.be/HL1UzIK-flA",
     "Mona Lisa": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
     "Sunflower": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
     "intentions": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3",
