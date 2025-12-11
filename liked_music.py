@@ -1,6 +1,6 @@
 import streamlit as st
 
-# ---- DATA (song info: artist + album cover) ----
+# ---- SONG DATABASE ----
 song_data = {
     "Work": {
         "artist": "Rihanna ft. Drake",
@@ -21,12 +21,37 @@ song_data = {
     "Closer": {
         "artist": "The Chainsmokers ft. Halsey",
         "cover": "https://i.scdn.co/image/ab67616d0000b27308c8c64c1e57a7ed29c2a793"
+    },
+    "My Mind & Me": {
+        "artist": "Selena Gomez",
+        "cover": "https://i.scdn.co/image/ab67616d0000b273e0d3cf492819e93915c93d95"
+    },
+    "Girls Like You": {
+        "artist": "Maroon 5 ft. Cardi B",
+        "cover": "https://i.scdn.co/image/ab67616d0000b27348eac0c3d5da5a0eab7e2b0b"
+    },
+    "Come Around Me": {
+        "artist": "Justin Bieber",
+        "cover": "https://i.scdn.co/image/ab67616d0000b2732b93926ab9dd98ec6053b457"
+    },
+    "Let Me": {
+        "artist": "Zayn",
+        "cover": "https://i.scdn.co/image/ab67616d0000b273a623a5a563b7c030546be9e5"
+    },
+    "Back To You": {
+        "artist": "Selena Gomez",
+        "cover": "https://i.scdn.co/image/ab67616d0000b273665fb692e8a54915d805885c"
     }
 }
 
-# ---- SESSION STATE FOR SONG LIST ----
-if "shopping_cart" not in st.session_state:
-    st.session_state.shopping_cart = ["Work", "Mona Lisa", "Sunflower", "intentions"]
+
+# ---- SESSION STATE ----
+if "liked" not in st.session_state:
+    st.session_state.liked = [
+        "Work", "Mona Lisa", "Sunflower", "intentions",
+        "My Mind & Me", "Girls Like You", "Come Around Me",
+        "Let Me", "Back To You"
+    ]
 
 
 # ---- PAGE CONFIG ----
@@ -35,49 +60,62 @@ st.set_page_config(page_title="Spotify Liked Songs", layout="wide")
 # ---- HEADER ----
 st.markdown("""
     <h1 style='color:#1DB954; font-size:48px;'>🎵 Spotify Liked Songs</h1>
-    <p style='font-size:20px; color:#ccc;'>Your saved tracks — Streamlit Edition</p>
+    <p style='font-size:20px; color:#ccc;'>Your favourite tracks — Streamlit Edition</p>
     <hr style='border:1px solid #1DB954;'>
 """, unsafe_allow_html=True)
 
 
-# ---- ADD SONG UI ----
-st.subheader("➕ Add a Song")
-add_option = st.selectbox("Select Song to Add", list(song_data.keys()))
-if st.button("Add to Liked Songs"):
-    if add_option not in st.session_state.shopping_cart:
-        st.session_state.shopping_cart.append(add_option)
-        st.success(f"Added **{add_option}** to your liked songs")
-    else:
-        st.warning("This song is already in your list.")
+# -------------------------------------
+# 1️⃣ SHOW LIKED SONGS FIRST
+# -------------------------------------
+st.subheader("💚 Your Liked Songs")
 
+cols = st.columns(3)
 
-# ---- REMOVE SONG UI ----
-st.subheader("➖ Remove a Song")
-remove_option = st.selectbox("Select Song to Remove", st.session_state.shopping_cart)
-if st.button("Remove from Liked Songs"):
-    st.session_state.shopping_cart.remove(remove_option)
-    st.error(f"Removed **{remove_option}** from your liked songs")
+for i, song in enumerate(st.session_state.liked):
+    with cols[i % 3]:
+        st.image(song_data[song]["cover"], width=250)
+        st.markdown(f"""
+        <div style="padding:10px; background-color:#111; border-radius:10px; margin-top:-10px;">
+            <h3 style="color:white;">{song}</h3>
+            <p style="color:#1DB954;">{song_data[song]["artist"]}</p>
+        </div>
+        """, unsafe_allow_html=True)
 
 
 st.write("---")
 
 
-# ---- DISPLAY SONG CARDS ----
-cols = st.columns(3)
+# -------------------------------------
+# 2️⃣ ADD SONG SECTION
+# -------------------------------------
+st.subheader("➕ Add a Song to Liked List")
 
-for index, song in enumerate(st.session_state.shopping_cart):
-    with cols[index % 3]:
-        st.image(song_data[song]["cover"], width=250)
-        st.markdown(f"""
-            <div style="padding:10px; background-color:#111; border-radius:10px; margin-top:-10px;">
-                <h3 style="color:white;">{song}</h3>
-                <p style="color:#1DB954;">{song_data[song]['artist']}</p>
-            </div>
-        """, unsafe_allow_html=True)
+add_choice = st.selectbox("Select a song:", list(song_data.keys()))
+
+if st.button("Add to Liked"):
+    if add_choice not in st.session_state.liked:
+        st.session_state.liked.append(add_choice)
+        st.success(f"Added **{add_choice}**!")
+    else:
+        st.warning("This song is already in your liked list.")
 
 
-# ---- FOOTER ----
+# -------------------------------------
+# 3️⃣ REMOVE SONG SECTION
+# -------------------------------------
+st.subheader("➖ Remove a Song From Liked List")
+
+remove_choice = st.selectbox("Select a song to remove:", st.session_state.liked)
+
+if st.button("Remove"):
+    st.session_state.liked.remove(remove_choice)
+    st.error(f"Removed **{remove_choice}**")
+
+
+# -------------------------------------
+# FOOTER
+# -------------------------------------
 st.markdown("""
-    <center><p style='color:#888; margin-top:40px;'>Built with ❤️ using Streamlit</p></center>
+    <center><p style='color:#666; margin-top:40px;'>Built with ❤️ using Streamlit</p></center>
 """, unsafe_allow_html=True)
-
