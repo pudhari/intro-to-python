@@ -3,7 +3,7 @@ import hashlib
 import textwrap
 
 # ---------------- PAGE CONFIG ----------------
-st.set_page_config(page_title="Liked Songs — Clean UI", layout="wide", page_icon="🎧")
+st.set_page_config(page_title="Liked Songs — Clean UI + Audio", layout="wide", page_icon="🎧")
 
 # ---------------- DATA ----------------
 song_data = {
@@ -19,12 +19,31 @@ song_data = {
     "Back To You": {"artist": "Selena Gomez"}
 }
 
+# ---- Audio previews (public example mp3s) ----
+# Replace these URLs with real preview mp3 URLs when you have them.
+song_previews = {
+    "Work": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+    "Mona Lisa": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
+    "Sunflower": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
+    "intentions": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3",
+    "Closer": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3",
+    "My Mind & Me": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3",
+    "Girls Like You": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3",
+    "Come Around Me": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3",
+    "Let Me": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3",
+    "Back To You": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3"
+}
+
 # ---------------- SESSION STATE ----------------
 if "liked" not in st.session_state:
     st.session_state.liked = [
         "My Mind & Me", "Girls Like You", "Come Around Me", "Let Me", "Back To You",
         "Work", "Mona Lisa", "Sunflower", "intentions"
     ]
+
+# Keep track of which song's audio player should be visible
+if "playing_song" not in st.session_state:
+    st.session_state.playing_song = None
 
 # ---------------- HELPER: color by name ----------------
 BASE_COLORS = [
@@ -61,6 +80,7 @@ st.markdown(
         padding:18px;
         box-shadow: 0 8px 24px rgba(15,23,42,0.06);
         transition: transform .14s ease, box-shadow .14s ease;
+        background: white;
     }
     .card:hover { transform: translateY(-6px); box-shadow: 0 18px 40px rgba(15,23,42,0.12); }
     .avatar {
@@ -99,20 +119,31 @@ st.write("")  # spacing
 with st.expander("Manage songs", expanded=True):
     cols = st.columns([3,1,1])
     with cols[0]:
-        to_add = st.selectbox("Add a song to liked list", [s for s in song_data.keys() if s not in st.session_state.liked])
+        available_to_add = [s for s in song_data.keys() if s not in st.session_state.liked]
+        if available_to_add:
+            to_add = st.selectbox("Add a song to liked list", available_to_add)
+        else:
+            to_add = None
+            st.info("No more songs available to add.")
     with cols[1]:
-        if st.button("Add"):
+        if st.button("Add") and to_add:
             if to_add and to_add not in st.session_state.liked:
                 st.session_state.liked.insert(0, to_add)  # add to top (liked shown first)
                 st.success(f"Added '{to_add}' to liked songs")
             else:
                 st.warning("Please select a valid song.")
     with cols[2]:
-        to_remove = st.selectbox("Remove a song", st.session_state.liked)
-        if st.button("Remove"):
-            if to_remove in st.session_state.liked:
-                st.session_state.liked.remove(to_remove)
-                st.info(f"Removed '{to_remove}'")
+        if st.session_state.liked:
+            to_remove = st.selectbox("Remove a song", st.session_state.liked, key="remove_dropdown")
+            if st.button("Remove"):
+                if to_remove in st.session_state.liked:
+                    st.session_state.liked.remove(to_remove)
+                    # stop any playing audio if that song was playing
+                    if st.session_state.playing_song == to_remove:
+                        st.session_state.playing_song = None
+                    st.experimental_rerun()
+        else:
+            st.info("No liked songs to remove.")
 
 st.write("---")
 
@@ -121,17 +152,19 @@ st.markdown("<div class='grid'>", unsafe_allow_html=True)
 
 # We'll display cards in columns using Streamlit layout to keep interactivity (remove button)
 cols = st.columns(3)
-for idx, song in enumerate(st.session_state.liked):
+for idx, song in enumerate(list(st.session_state.liked)):  # copy list to avoid mutation issues
     col = cols[idx % 3]
     with col:
         col_color = color_for(song)
         avatar_html = f"<div class='avatar' style='background:{col_color};'>{initials(song)}</div>"
+        # Safe f-string expression for artist (fixed bug by using {} literal inside expression)
+        artist_text = song_data.get(song, {}).get('artist', 'Unknown Artist')
         card_html = textwrap.dedent(f"""
             <div class='card'>
                 {avatar_html}
                 <div>
                     <p class='song-title'>{song}</p>
-                    <p class='artist'>{song_data.get(song,{{}}).get('artist','Unknown Artist')}</p>
+                    <p class='artist'>{artist_text}</p>
                 </div>
         """)
         st.markdown(card_html, unsafe_allow_html=True)
@@ -139,17 +172,31 @@ for idx, song in enumerate(st.session_state.liked):
         # action buttons under each card
         r_col1, r_col2 = st.columns([2,1])
         with r_col1:
-            if st.button("Play", key=f"play_{idx}_{song}"):
-                st.info(f"Play pressed for '{song}' (preview not implemented)")
+            if st.button("Play", key=f"play_{song}"):
+                # set the playing song so we can show a player
+                st.session_state.playing_song = song
+                # don't rerun here; player will appear below
         with r_col2:
-            if st.button("Remove", key=f"remove_{idx}_{song}"):
-                st.session_state.liked.remove(song)
-                st.experimental_rerun()
+            if st.button("Remove", key=f"remove_{song}"):
+                if song in st.session_state.liked:
+                    st.session_state.liked.remove(song)
+                    if st.session_state.playing_song == song:
+                        st.session_state.playing_song = None
+                    st.experimental_rerun()
 
+        # close card div
         st.markdown("</div>", unsafe_allow_html=True)
+
+        # If this song is selected for play, show audio player
+        if st.session_state.playing_song == song:
+            preview_url = song_previews.get(song)
+            if preview_url:
+                st.audio(preview_url)
+            else:
+                st.info("Preview not available for this song.")
 
 st.markdown("</div>", unsafe_allow_html=True)
 
 # ---------------- FOOTER ----------------
 st.write("")
-st.markdown("<div style='color:#6b7280; font-size:13px;'>Tip: Use the Manage songs expander to add or remove tracks quickly.</div>", unsafe_allow_html=True)
+st.markdown("<div style='color:#6b7280; font-size:13px;'>Tip: Click Play to open the audio preview for a song. Replace the preview URLs with real song preview links when available.</div>", unsafe_allow_html=True)
