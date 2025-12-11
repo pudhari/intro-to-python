@@ -63,7 +63,7 @@ if "liked" not in st.session_state:
 
 st.markdown("""
     <h1 style='color:#FF69B4; font-size:48px; text-align:center;'>🎧 Your Liked Music</h1>
-    <p style='text-align:center; font-size:18px; color:#999;'>Click play to listen</p>
+    <p style='text-align:center; font-size:18px; color:#1E90FF;'>Click play to listen</p>
     <hr>
 """, unsafe_allow_html=True)
 
@@ -78,7 +78,7 @@ for index, song in enumerate(st.session_state.liked):
               padding:20px; 
               border-radius:15px; 
               margin-bottom:20px;
-              border-left: 6px solid #6C63FF;">
+              border-left: 6px solid #FF69B4;">
                 <h3 style="color:white;">{song}</h3>
                 <p style="color:#bbb;">{song_data[song]['artist']}</p>
             </div>
