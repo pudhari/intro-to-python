@@ -2,20 +2,6 @@ import streamlit as st
 
 st.set_page_config(page_title="Liked Music Player", layout="wide")
 
-# ---- COLOR THEMES ----
-theme_colors = {
-    "Blue": {"bg": "#001F3F", "border": "#1E90FF"},
-    "Yellow": {"bg": "#3A3000", "border": "#F1C40F"},
-    "Pink": {"bg": "#3F0028", "border": "#FF69B4"},
-    "Green": {"bg": "#002E1A", "border": "#2ECC71"},
-    "Black": {"bg": "#1a1a1a", "border": "#6C63FF"}
-}
-
-selected_theme = st.selectbox("🎨 Choose Theme Color", list(theme_colors.keys()))
-
-bg_color = theme_colors[selected_theme]["bg"]
-border_color = theme_colors[selected_theme]["border"]
-
 # ---- YOUTUBE PREVIEW LINKS ----
 song_data = {
     "Work": {
@@ -76,7 +62,7 @@ if "liked" not in st.session_state:
     ]
 
 st.markdown("""
-    <h1 style='color:#6C63FF; font-size:48px; text-align:center;'>🎧 Your Liked Music</h1>
+    <h1 style='color:#FF69B4; font-size:48px; text-align:center;'>🎧 Your Liked Music</h1>
     <p style='text-align:center; font-size:18px; color:#999;'>Click play to listen</p>
     <hr>
 """, unsafe_allow_html=True)
@@ -120,17 +106,3 @@ if st.button("Add"):
         st.experimental_rerun()
     else:
         st.warning("Already in liked list!")
-st.markdown(f"""
-    <div style="
-      background-color:#f8f9ff; 
-      padding:20px; 
-      border-radius:15px; 
-      margin-bottom:20px;
-      border: 2px solid #c7d2fe;
-      box-shadow: 0px 2px 8px rgba(0,0,0,0.1);">
-        <h3 style="color:#1f1f1f; font-weight:600;">{song}</h3>
-        <p style="color:#4f4f4f;">{song_data[song]['artist']}</p>
-    </div>
-""", unsafe_allow_html=True)
-
-
