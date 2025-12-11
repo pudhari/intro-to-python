@@ -120,16 +120,17 @@ if st.button("Add"):
         st.experimental_rerun()
     else:
         st.warning("Already in liked list!")
-
 st.markdown(f"""
     <div style="
-      background-color:{bg_color}; 
+      background-color:#f8f9ff; 
       padding:20px; 
       border-radius:15px; 
       margin-bottom:20px;
-      border-left: 6px solid {border_color};">
-        <h3 style="color:white;">{song}</h3>
-        <p style="color:#ddd;">{song_data[song]['artist']}</p>
+      border: 2px solid #c7d2fe;
+      box-shadow: 0px 2px 8px rgba(0,0,0,0.1);">
+        <h3 style="color:#1f1f1f; font-weight:600;">{song}</h3>
+        <p style="color:#4f4f4f;">{song_data[song]['artist']}</p>
     </div>
 """, unsafe_allow_html=True)
+
 
