@@ -9,8 +9,8 @@ song_data = {
         "youtube": "https://youtu.be/HL1UzIK-flA"
     },
     "Mona Lisa": {
-        "artist": "Lil Wayne ft. Kendrick Lamar",
-        "youtube": "https://youtu.be/cD_q_cFPUq4"
+        "artist": "Dominic Fike",
+        "youtube": "https://youtu.be/XiqN3pOIVIw?si=E-aXA86iS2Z-cV07"
     },
     "Sunflower": {
         "artist": "Post Malone & Swae Lee",
