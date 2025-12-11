@@ -74,7 +74,7 @@ for index, song in enumerate(st.session_state.liked):
     with cols[index % 3]:
         st.markdown(f"""
             <div style="
-              background-color:#1a1a1a; 
+              background-color:#3F0028; 
               padding:20px; 
               border-radius:15px; 
               margin-bottom:20px;
