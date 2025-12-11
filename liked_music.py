@@ -1,6 +1,6 @@
 import streamlit as st
 
-# ---- DATA (fake album covers for demo) ----
+# ---- DATA (song info: artist + album cover) ----
 song_data = {
     "Work": {
         "artist": "Rihanna ft. Drake",
@@ -24,20 +24,15 @@ song_data = {
     }
 }
 
-# ---- INITIAL SONG LIST ----
-shopping_cart = ["Work", "Mona Lisa", "Sunflower", "intentions"]
+# ---- SESSION STATE FOR SONG LIST ----
+if "shopping_cart" not in st.session_state:
+    st.session_state.shopping_cart = ["Work", "Mona Lisa", "Sunflower", "intentions"]
 
-# Apply your code logic:
-add_item = "Closer"
-shopping_cart.append(add_item)
 
-remove_item = "Work"
-shopping_cart.remove(remove_item)
-
-# ---- STREAMLIT UI ----
+# ---- PAGE CONFIG ----
 st.set_page_config(page_title="Spotify Liked Songs", layout="wide")
 
-# Header
+# ---- HEADER ----
 st.markdown("""
     <h1 style='color:#1DB954; font-size:48px;'>🎵 Spotify Liked Songs</h1>
     <p style='font-size:20px; color:#ccc;'>Your saved tracks — Streamlit Edition</p>
@@ -45,10 +40,32 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
-# Display songs
-cols = st.columns(3)  # grid layout
+# ---- ADD SONG UI ----
+st.subheader("➕ Add a Song")
+add_option = st.selectbox("Select Song to Add", list(song_data.keys()))
+if st.button("Add to Liked Songs"):
+    if add_option not in st.session_state.shopping_cart:
+        st.session_state.shopping_cart.append(add_option)
+        st.success(f"Added **{add_option}** to your liked songs")
+    else:
+        st.warning("This song is already in your list.")
 
-for index, song in enumerate(shopping_cart):
+
+# ---- REMOVE SONG UI ----
+st.subheader("➖ Remove a Song")
+remove_option = st.selectbox("Select Song to Remove", st.session_state.shopping_cart)
+if st.button("Remove from Liked Songs"):
+    st.session_state.shopping_cart.remove(remove_option)
+    st.error(f"Removed **{remove_option}** from your liked songs")
+
+
+st.write("---")
+
+
+# ---- DISPLAY SONG CARDS ----
+cols = st.columns(3)
+
+for index, song in enumerate(st.session_state.shopping_cart):
     with cols[index % 3]:
         st.image(song_data[song]["cover"], width=250)
         st.markdown(f"""
@@ -59,10 +76,8 @@ for index, song in enumerate(shopping_cart):
         """, unsafe_allow_html=True)
 
 
-# Footer
+# ---- FOOTER ----
 st.markdown("""
-    <br><br>
-    <center>
-    <p style='color:#888;'>Built with ❤️ using Streamlit</p>
-    </center>
+    <center><p style='color:#888; margin-top:40px;'>Built with ❤️ using Streamlit</p></center>
 """, unsafe_allow_html=True)
+
