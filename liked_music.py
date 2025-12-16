@@ -49,7 +49,7 @@ song_data = {
 # ---- DEFAULT LIKED SONGS ----
 if "liked" not in st.session_state:
     st.session_state.liked = [
-        "Work",
+        "Flute",
         "Mona Lisa",
         "Sunflower",
         "Intentions",
