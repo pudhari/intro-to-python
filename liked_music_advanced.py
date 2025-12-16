@@ -3,48 +3,23 @@ import streamlit as st
 st.set_page_config(page_title="Liked Music Player", layout="wide")
 
 # ---- YOUTUBE PREVIEW LINKS ----
-song_data = {
-    "Flute": {
-        "artist": "Krishna",
-        "youtube": "https://youtu.be/yRrU0zCUVJg?si=s2iCrvtBIVLrAOWl"
-    },
-    "Mona Lisa": {
-        "artist": "Dominic Fike",
-        "youtube": "https://youtu.be/XiqN3pOIVIw?si=E-aXA86iS2Z-cV07"
-    },
-    "Sunflower": {
-        "artist": "Post Malone & Swae Lee",
-        "youtube": "https://youtu.be/ApXoWvfEYVU?si=TrRfsWimtAbPfZck"
-    },
-    "Intentions": {
-        "artist": "Justin Bieber ft. Quavo",
-        "youtube": "https://youtu.be/3AyMjyHu1bA?si=KQ3kGF0l4GphAe2P"
-    },
-    "Girls Like You": {
-        "artist": "Maroon 5 ft. Cardi B",
-        "youtube": "https://youtu.be/aJOTlE1K90k"
-    },
-    "Come Around Me": {
-        "artist": "Justin Bieber",
-        "youtube": "https://youtu.be/GtDwH6fPRMA?si=RbSvZT3OLHZf6C9t"
-    },
-    "Let Me": {
-        "artist": "Zayn",
-        "youtube": "https://youtu.be/J-dv_DcDD_A?si=_fAufEPmmMN_pX7M"
-    },
-    "Back To You": {
-        "artist": "Selena Gomez",
-        "youtube": "https://youtu.be/VY1eFxgRR-k?si=GMj5GJYYIw6aiSLz"
-    },
-    "My Mind & Me": {
-        "artist": "Selena Gomez",
-        "youtube": "https://youtu.be/TW98pGSTvM0?si=0KNLDCqLly1woXAk"
-    },
-    "Closer": {
-        "artist": "The Chainsmokers ft. Halsey",
-        "youtube": "https://youtu.be/PT2_F-1esPk?si=GCj-C2o1yJ1ecQxZ"
+if "song_data" not in st.session_state:
+    st.session_state.song_data = {
+        "Flute": {
+            "artist": "Krishna",
+            "youtube": "https://youtu.be/yRrU0zCUVJg"
+        },
+        "Mona Lisa": {
+            "artist": "Dominic Fike",
+            "youtube": "https://youtu.be/XiqN3pOIVIw"
+        },
+        "Sunflower": {
+            "artist": "Post Malone & Swae Lee",
+            "youtube": "https://youtu.be/ApXoWvfEYVU"
+        }
+        # (keep the rest if you want)
     }
-}
+
 
 # ---- DEFAULT LIKED SONGS ----
 if "liked" not in st.session_state:
