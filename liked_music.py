@@ -4,9 +4,9 @@ st.set_page_config(page_title="Liked Music Player", layout="wide")
 
 # ---- YOUTUBE PREVIEW LINKS ----
 song_data = {
-    "Work": {
-        "artist": "Rihanna ft. Drake",
-        "youtube": "https://youtu.be/HL1UzIK-flA"
+    "Flute": {
+        "artist": "Krishna",
+        "youtube": "https://youtu.be/yRrU0zCUVJg?si=s2iCrvtBIVLrAOWl"
     },
     "Mona Lisa": {
         "artist": "Dominic Fike",
