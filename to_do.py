@@ -80,12 +80,12 @@ for index, t in enumerate(st.session_state.tasks):
     with col1:
         if st.button("✅ Mark Done", key=f"done_{index}"):
             st.session_state.tasks[index]["done"] = True
-            st.experimental_rerun()
+            st.rerun()
 
     with col2:
         if st.button("🗑 Remove", key=f"remove_{index}"):
             st.session_state.tasks.pop(index)
-            st.experimental_rerun()
+            st.rerun()
 
 st.markdown("---")
 st.write("Stay organised 💪")
