@@ -1,7 +1,7 @@
 import streamlit as st
 from datetime import datetime
 
-st.set_page_config(page_title="Organised Life", layout="centered")
+st.set_page_config(page_title="Organise your Life with Oh-to-Dooo", layout="centered")
 
 # ---------- THEME ----------
 st.markdown("""
@@ -23,8 +23,8 @@ body {
 </style>
 """, unsafe_allow_html=True)
 
-st.title("🗓️ Organised Life")
-st.markdown("Plan your day. Stay disciplined.")
+st.title("🗓️ Organise your Life with Oh-to-Dooo")
+st.markdown("Plan your day.")
 st.markdown("---")
 
 # ---------- SESSION STATE ----------
