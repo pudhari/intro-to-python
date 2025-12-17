@@ -1,9 +1,12 @@
 import streamlit as st
+import json
+import os
 from datetime import datetime
 
-st.set_page_config(page_title="Organise your Life with Oh-to-Dooo", layout="centered")
+# ---------------- PAGE CONFIG ----------------
+st.set_page_config(page_title="Organised Life", layout="centered")
 
-# ---------- THEME ----------
+# ---------------- THEME ----------------
 st.markdown("""
 <style>
 body {
@@ -23,15 +26,36 @@ body {
 </style>
 """, unsafe_allow_html=True)
 
-st.title("🗓️ Organise your Life with Oh-to-Dooo")
-st.markdown("Plan your day.")
+st.title("🗓️ Organised Life")
+st.write("Plan your day. Stay consistent.")
 st.markdown("---")
 
-# ---------- SESSION STATE ----------
-if "tasks" not in st.session_state:
-    st.session_state.tasks = []
+# ---------------- FILE STORAGE ----------------
+FILE_NAME = "tasks.json"
 
-# ---------- ADD TASK ----------
+def save_tasks(tasks):
+    with open(FILE_NAME, "w") as f:
+        json.dump(tasks, f)
+
+def load_tasks():
+    if os.path.exists(FILE_NAME):
+        with open(FILE_NAME, "r") as f:
+            return json.load(f)
+    return []
+
+# ---------------- SESSION STATE ----------------
+if "tasks" not in st.session_state:
+    raw_tasks = load_tasks()
+    st.session_state.tasks = [
+        {
+            "task": t["task"],
+            "time": datetime.strptime(t["time"], "%I:%M %p"),
+            "done": t["done"]
+        }
+        for t in raw_tasks
+    ]
+
+# ---------------- ADD TASK ----------------
 st.subheader("➕ Add a Task")
 
 task_name = st.text_input("Task")
@@ -43,28 +67,40 @@ if st.button("Add Task"):
     else:
         try:
             time_obj = datetime.strptime(time_input.upper(), "%I:%M %p")
+
             st.session_state.tasks.append({
                 "task": task_name,
                 "time": time_obj,
                 "done": False
             })
-            st.success("Task added ✅")
-        except ValueError:
-            st.error("Invalid time format")
 
-# ---------- SORT TASKS ----------
+            save_tasks([
+                {
+                    "task": t["task"],
+                    "time": t["time"].strftime("%I:%M %p"),
+                    "done": t["done"]
+                }
+                for t in st.session_state.tasks
+            ])
+
+            st.success("Task added ✅")
+            st.rerun()
+
+        except ValueError:
+            st.error("Invalid time format. Use HH:MM AM/PM")
+
+# ---------------- SORT TASKS ----------------
 st.session_state.tasks.sort(key=lambda x: x["time"])
 
+# ---------------- SHOW TASKS ----------------
 st.markdown("---")
 st.subheader("📋 Your Tasks")
 
-# ---------- SHOW TASKS ----------
 if not st.session_state.tasks:
     st.info("No tasks yet. Add one above ☝️")
 
 for index, t in enumerate(st.session_state.tasks):
     time_str = t["time"].strftime("%I:%M %p")
-
     task_style = "done" if t["done"] else ""
 
     st.markdown(f"""
@@ -80,12 +116,32 @@ for index, t in enumerate(st.session_state.tasks):
     with col1:
         if st.button("✅ Mark Done", key=f"done_{index}"):
             st.session_state.tasks[index]["done"] = True
+
+            save_tasks([
+                {
+                    "task": t["task"],
+                    "time": t["time"].strftime("%I:%M %p"),
+                    "done": t["done"]
+                }
+                for t in st.session_state.tasks
+            ])
+
             st.rerun()
 
     with col2:
         if st.button("🗑 Remove", key=f"remove_{index}"):
             st.session_state.tasks.pop(index)
+
+            save_tasks([
+                {
+                    "task": t["task"],
+                    "time": t["time"].strftime("%I:%M %p"),
+                    "done": t["done"]
+                }
+                for t in st.session_state.tasks
+            ])
+
             st.rerun()
 
 st.markdown("---")
-st.write("Stay organised 💪")
+st.write("💪 Stay organised. Small steps daily.")
