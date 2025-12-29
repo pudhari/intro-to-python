@@ -53,13 +53,15 @@ with atm_tab:
                         st.success("Access granted")
                         st.write("Current balance:", st.session_state.balance)
 
-                        withdraw_amt = st.number_input(
-                            "Enter withdrawal amount",
-                            min_value=0,
-                            step=100
-                        )
-
-                        if st.button("Withdraw"):
+                        with st.form("withdraw_form"):
+                            withdraw_amt = st.number_input(
+                                "Enter withdrawal amount",
+                                min_value=0,
+                                step=100
+                            )
+                            submit = st.form_submit_button("Withdraw")
+                        
+                        if submit:
                             if withdraw_amt <= st.session_state.balance:
                                 st.session_state.balance -= withdraw_amt
                                 st.success("Withdrawal successful")
