@@ -15,6 +15,13 @@ password = "abcd"  # admin password
 st.title("🎬 Movie Booking System")
 st.write("=" * 47)
 
+# MENU
+st.write("### What do you want to do?")
+st.write("**1.** Check available seats and ticket price")
+st.write("**2.** Book tickets")
+st.write("**3.** Admin: add seats and change price")
+st.write("**4.** Exit")
+
 st.write("### Press a number to choose:")
 col1, col2, col3, col4 = st.columns(4)
 
