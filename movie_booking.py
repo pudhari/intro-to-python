@@ -13,7 +13,7 @@ if "choice" not in st.session_state:
 password = "abcd"  # admin password
 
 st.title("🎬 Movie Booking System")
-st.write("=" * 47)
+st.write("=" * 67)
 
 # MENU
 st.write("### What do you want to do?")
@@ -41,7 +41,7 @@ with col4:
     if st.button("4"):
         st.session_state.choice = 4
 
-st.write("=" * 47)
+st.write("=" * 67)
 
 # Choice 1
 if st.session_state.choice == 1:
