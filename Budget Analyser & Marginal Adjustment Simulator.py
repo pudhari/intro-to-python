@@ -1,93 +1,87 @@
 import streamlit as st
-import matplotlib.pyplot as plt
+import plotly.express as px
 
 st.title("Budget Analyser & Marginal Adjustment Simulator")
-st.caption("Simulates small (5–15%) reductions in expenses to show their effect on savings.")
 
-st.divider()
+# -------------------- INPUT SECTION --------------------
+st.header("Budget Analyser")
 
-# ---------- INPUTS ----------
 goal = st.number_input("Monthly savings target (₹)", min_value=0, step=500)
 income = st.number_input("Monthly income (₹)", min_value=0, step=1000)
 
 st.subheader("Monthly Expenditure")
-food = st.number_input("Food (₹)", min_value=0)
-rent = st.number_input("Rent (₹)", min_value=0)
-transport = st.number_input("Transport (₹)", min_value=0)
-education = st.number_input("Education (₹)", min_value=0)
-entertainment = st.number_input("Entertainment (₹)", min_value=0)
-health = st.number_input("Health (₹)", min_value=0)
-clothing = st.number_input("Clothing & Footwear (₹)", min_value=0)
-others = st.number_input("Others (₹)", min_value=0)
+expenses = {
+    "food": st.number_input("Food (₹)", min_value=0),
+    "rent": st.number_input("Rent (₹)", min_value=0),
+    "transport": st.number_input("Transport (₹)", min_value=0),
+    "education": st.number_input("Education (₹)", min_value=0),
+    "entertainment": st.number_input("Entertainment (₹)", min_value=0),
+    "health": st.number_input("Health (₹)", min_value=0),
+    "clothing": st.number_input("Clothing (₹)", min_value=0),
+    "others": st.number_input("Others (₹)", min_value=0)
+}
 
-# ---------- STORE EXPENSES ----------
-if "expenses" not in st.session_state:
-    st.session_state.expenses = {
-        "food": food,
-        "rent": rent,
-        "transport": transport,
-        "education": education,
-        "entertainment": entertainment,
-        "health": health,
-        "clothing": clothing,
-        "others": others
-    }
-
-expenses = st.session_state.expenses
+# -------------------- ANALYSIS --------------------
 total_expense = sum(expenses.values())
 savings = income - total_expense
 
-# ---------- SUMMARY ----------
 st.divider()
-st.subheader("Budget Summary")
+st.subheader("Summary")
 
-st.write(f"**Total Expenditure:** ₹{round(total_expense,2)}")
+st.write(f"**Total Expenditure:** ₹{total_expense}")
+st.write(f"**Savings:** ₹{savings}")
 
 if total_expense <= income:
-    st.success("Expenditure is within income limit.")
+    st.success("Expenditure is within income limit")
 else:
-    st.error("Expenditure exceeds income.")
+    st.error("Expenditure exceeds income")
 
-if savings > 0:
-    percent = round((savings / income) * 100, 2)
-    st.write(f"**Savings:** ₹{round(savings,2)} ({percent}%)")
-    if savings >= goal:
-        st.success("Savings target achieved.")
-    else:
-        st.warning(f"Shortfall from goal: ₹{goal - savings}")
+if savings >= goal:
+    st.success("Savings target achieved 🎯")
 else:
-    st.warning("No savings made this month.")
+    st.warning(f"Shortfall from goal: ₹{goal - savings}")
 
-# ---------- PIE CHART ----------
-st.divider()
+# -------------------- PIE CHART --------------------
 st.subheader("Expense Distribution")
 
-fig, ax = plt.subplots()
-ax.pie(expenses.values(), labels=expenses.keys(), autopct="%1.1f%%", startangle=90)
-ax.axis("equal")
-st.pyplot(fig)
+fig = px.pie(
+    names=expenses.keys(),
+    values=expenses.values(),
+    hole=0.4
+)
+st.plotly_chart(fig, use_container_width=True)
 
-# ---------- MARGINAL ADJUSTMENT ----------
+# -------------------- MARGINAL ADJUSTMENT --------------------
 st.divider()
-st.subheader("Marginal Adjustment Simulator")
+st.header("Marginal Adjustment Simulator")
+st.caption("Simulates small (5–15%) reductions in expenses to show their effect")
 
-category = st.selectbox("Select category to reduce", list(expenses.keys()))
-reduction = st.slider("Reduction percentage", 5, 15)
+category = st.selectbox("Select category to reduce", expenses.keys())
+percent = st.slider("Reduction percentage", 5, 15)
 
 if st.button("Apply Adjustment"):
-    previous_total = total_expense
-    previous_savings = savings
+    old_total = total_expense
+    old_savings = savings
 
-    change = expenses[category] * reduction / 100
-    expenses[category] -= change
+    reduction = expenses[category] * percent / 100
+    expenses[category] -= reduction
 
-    st.success(f"{category.capitalize()} reduced by ₹{round(change,2)}")
+    total_expense = sum(expenses.values())
+    savings = income - total_expense
 
-    new_total = sum(expenses.values())
-    new_savings = income - new_total
+    st.success(f"{category.capitalize()} reduced by ₹{round(reduction,2)}")
 
-    st.write(f"**New Total Expenditure:** ₹{round(new_total,2)}")
-    st.write(f"**Change in Savings:** ₹{round(new_savings - previous_savings,2)}")
+    st.subheader("Updated Impact")
+    st.write(f"**New Total Expenditure:** ₹{round(total_expense,2)}")
+    st.write(f"**New Savings:** ₹{round(savings,2)}")
 
-    # Update session state
-    st.session_state.expenses = expenses
+    st.write(f"**Expenditure Reduced By:** ₹{round(old_total - total_expense,2)}")
+    st.write(f"**Savings Increased By:** ₹{round(savings - old_savings,2)}")
+
+    fig2 = px.pie(
+        names=expenses.keys(),
+        values=expenses.values(),
+        hole=0.4
+    )
+    st.plotly_chart(fig2, use_container_width=True)
+
